@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+
+
+
+
+section img {
+  width: 35%;
+  margin: 1rem;
+  border: 5px solid transparent;
+}
+
+section img:hover {
+  border: 5px solid rgb(169, 108, 28);
+  cursor: pointer;
+}
+
+
+/* -- button --*/
+
+/* main > div */
+
+section + div {
+  background-color: rgba(128,128,128, 0.734);
+  pointer-events:none;
+}
+
+section + div.clicks-allowed {
+
+}

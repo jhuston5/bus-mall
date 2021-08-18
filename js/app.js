@@ -5,7 +5,7 @@ let allProducts = [];
 
 // Specify DOM containers
 let myContainer = document.querySelector('section');
-let myButton = document.querySelector('section + div');
+
 
 // only use one click event on container elements
 let image1 = document.querySelector('section img:first-child');
@@ -14,7 +14,9 @@ let image3 = document.querySelector('section img:nth-child(3)');
 
 // Set click counters
 let clicks = 0;
-let clickAllowed = 5;
+let clickAllowed = 25;
+let productArray = [];
+let numberOfUniqueIndexes = 6;
 
 
 // Constructor function creating a new product
@@ -33,27 +35,16 @@ function selectRandomProduct() {
 }
 
 function renderProducts() {
-  let productArray =  [];
-  let product1 = selectRandomProduct();
-  productArray.push(product1);
+  while (productArray.length < numberOfUniqueIndexes) {
+  let randomProduct = selectRandomProduct();
+  if (!productArray.includes(randomProduct)) {
+    productArray.push(randomProduct);
+  }
+}
 
-  
-  let product2 = selectRandomProduct();
-  if (productArray.includes(product2)) {
-    while (productArray.includes(product2) === true) { 
-    product2 = selectRandomProduct();
-    }
-  }
-  productArray.push(product2);
-  
-  
-  let product3 = selectRandomProduct();
-  if (productArray.includes(product3)) {
-    while (productArray.includes(product3) === true) { 
-    product3 = selectRandomProduct();
-    }
-  }
-  productArray.push(product3);
+let product1 = productArray.shift();
+let product2 = productArray.shift();
+let product3 = productArray.shift();
 
   image1.src = allProducts[product1].src;
   image2.src = allProducts[product2].src;
@@ -69,7 +60,7 @@ function renderProducts() {
   allProducts[product3].views++;
 }
 
-console.log(allProducts);
+
 
 
 function handleProductClick(e) {
@@ -88,20 +79,11 @@ function handleProductClick(e) {
   }
   renderProducts();
   if(clicks === clickAllowed) {
-    myButton.className = 'clicks-allowed';
     myContainer.removeEventListener('click', handleProductClick);
+    renderChart();
   }
 };
 
-
-function renderResults() {
-  let ul = document.querySelector('ul');
-  for (let i = 0; i < allProducts.length; i++) {
-    let li = document.createElement('li');
-    li.textContent = `${allProducts[i].name} had ${allProducts[i].views} view and was clicked ${allProducts[i].clicks} times.`;
-    ul.appendChild(li);
-  }
-}
 
 
 new Product('sweep', 'png');
@@ -127,4 +109,51 @@ renderProducts();
 
 
 myContainer.addEventListener('click', handleProductClick);
-myButton.addEventListener('click', renderResults);
+
+
+function renderChart() {
+let productClicks = [];
+let productViews = [];
+let productNames = [];
+for (let i = 0; i < allProducts.length; i++) {
+ productNames.push(allProducts[i].name);
+ productClicks.push(allProducts[i].clicks);
+ productViews.push(allProducts[i].views);
+}
+
+
+let chartObject = {
+  type: 'bar',
+  data: {
+      labels: productNames,
+      datasets: [{
+          label: '# of Views',
+          data: productViews,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          hoverBorderWidth: 2,
+          borderWidth: 1
+      },
+      {
+        label: '# of Clicks',
+        data: productClicks,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor:  'rgba(255, 99, 132, 1)',
+        hoverBorderWidth: 2,
+        borderWidth: 1
+    }]
+  },
+  options: {
+      scales: {
+          y: {
+              beginAtZero: true
+          }
+      }
+  }
+};
+
+let ctx = document.getElementById('myChart').getContext('2d');
+let myChart = new Chart(ctx, chartObject);
+
+};
+

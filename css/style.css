@@ -52,9 +52,10 @@ section img:hover {
 /*-- Chart --*/
 
 canvas {
-  max-width: 500px;
+  max-width: 700px;
   max-height: 500px;
   margin: auto;
+  /* background-color: white; */
 }
 
 /* -- button -- */

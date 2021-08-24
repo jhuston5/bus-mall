@@ -38,13 +38,12 @@ function makeAProduct(name, fileExtension, views, clicks) {
 
 function storeAProduct(){
   let stringifiedProducts = JSON.stringify(allProducts);
-  localStorage.setItem('products', stringifiedProducts);
+  localStorage.setItem('productStorage', stringifiedProducts);
 }
 
 
 function getProducts() {
-  console.log('I fired');
-  let potentialProductPicks = localStorage.getItem('products');
+  let potentialProductPicks = localStorage.getItem('productStorage');
   if (potentialProductPicks) {
     let parsedProducts = JSON.parse(potentialProductPicks);
     for (let order of parsedProducts) {
@@ -53,9 +52,9 @@ function getProducts() {
       let views = order.views;
       let clicks = order.clicks;
       makeAProduct(name, fileExtension, views, clicks)
-      console.log(allProducts);
     } 
   } else {
+    console.log('Creating new products');
     new Product('sweep', 'png');
     new Product('bag');
     new Product('banana');
@@ -73,7 +72,6 @@ function getProducts() {
     new Product('unicorn');
     new Product('water-can');
     new Product('wine-glass');
-    console.log(allProducts);
   }
 
   renderProducts();
@@ -127,11 +125,12 @@ function handleProductClick(e) {
       break;
     }
   }
-  // renderProducts();
+  renderProducts();
   if(clicks === clickAllowed) {
-    storeAProduct();
     myContainer.removeEventListener('click', handleProductClick);
     renderChart();
+    // Moved storeAProduct below mycontainer
+    storeAProduct();
   }
 };
 
